@@ -77,6 +77,18 @@ def launched():
     return question('Welcome to Shape Board')
 
 
+@ask.intent('AMAZON.StopIntent')
+@ask.intent('AMAZON.CancelIntent')
+@ask.session_ended
+def stop(): 
+  return statement("Good bye")
+
+
+@ask.intent('AMAZON.HelpIntent')
+def help(): 
+  return question("You can add shapes by saying something like add a red circle or you can say clear the board or you can say exit.")
+
+
 @ask.intent('ClearShapes')
 def alexa_clear_shapes(): 
   clear_shapes()
