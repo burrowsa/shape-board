@@ -9,7 +9,7 @@
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
           <b-nav-item-dropdown :text="shape" right v-for="shape in ['circle', 'triangle', 'square', 'rectangle']" :key="shape" class="caps">
-            <b-dropdown-item v-on:click="addRandomShape(shape, color)" v-for="color in ['red', 'green', 'blue', 'black']" :key="color" :class="`caps ${color}`">{{color}}</b-dropdown-item>
+            <b-dropdown-item v-on:click="addRandomShape(shape, color)" v-for="color in ['red', 'yellow', 'green', 'blue', 'black']" :key="color" :class="`caps ${color}`">{{color}}</b-dropdown-item>
           </b-nav-item-dropdown>
 
           <b-nav-item v-on:click="clear" right>Clear</b-nav-item>
@@ -49,7 +49,9 @@ const shapes = []
 const socket = io(location.protocol + '//' + document.domain + ':' + location.port + '/v1')
 
 socket.on('update', function (data) {
-  shapes.splice()
+  while (shapes.length) {
+    shapes.pop()
+  }
 
   data.forEach(function (element) {
     shapes.push(element)
@@ -134,6 +136,10 @@ export default {
 
 .black {
   color: black !important;
+}
+
+.yellow {
+  color: yellow !important;
 }
 
 .caps {
