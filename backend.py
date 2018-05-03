@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from flask import Flask, send_file, request, redirect, jsonify
 from flask_socketio import SocketIO, emit, disconnect
-from flask_ask import Ask, statement, session as ask_session, delegate, request as ask_request
+from flask_ask import Ask, statement, session as ask_session, delegate
 import sys, json
 from random import randint, choice
 
@@ -9,7 +9,6 @@ from random import randint, choice
 app = Flask(__name__) 
 app.config['SECRET_KEY'] = b"SECRET!!!! Shhhhhhh" 
 ask = Ask(app, '/alexa')
-app.config['ASK_VERIFY_REQUESTS'] = False
 socketio = SocketIO(app) 
 
 
@@ -49,7 +48,7 @@ def create_shape(shape, color):
     new_shape['width'] = randint(10, 600)
     new_shape['height'] = randint(10, 400)
   else:
-    new_shape.side = randint(10, 200)
+    new_shape['side'] = randint(10, 200)
   
   _shapes.append(new_shape)
 
@@ -72,6 +71,11 @@ def v1_error_handler(e):
   print(e, file=sys.stderr)
 
 
+@ask.launch
+def launched():
+    return question('Welcome to Shape Board')
+
+
 @ask.intent('ClearShapes')
 def alexa_clear_shapes(): 
   clear_shapes()
@@ -85,7 +89,7 @@ def alexa_clear_shapes():
 @ask.intent('AddShape')
 def alexa_add_shape(shape, color):
   if ask_session['dialogState'] != 'COMPLETED' or shape is None or color is None:
-    return delegate(speech=None)
+    return delegate()
 
   if shape.lower() not in {'circle', 'rectangle', 'triangle', 'square'}:
     return statement("Sorry, I don't know the shape {}".format(shape))
