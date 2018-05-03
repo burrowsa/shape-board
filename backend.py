@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from flask import Flask, send_file, request, redirect, jsonify
 from flask_socketio import SocketIO, emit, disconnect
-from flask_ask import Ask, statement, session as ask_session, delegate
+from flask_ask import Ask, statement, session as ask_session, delegate, question
 import sys, json
 from random import randint, choice
 
@@ -9,6 +9,7 @@ from random import randint, choice
 app = Flask(__name__) 
 app.config['SECRET_KEY'] = b"SECRET!!!! Shhhhhhh" 
 ask = Ask(app, '/alexa')
+app.config['ASK_VERIFY_REQUESTS'] = False
 socketio = SocketIO(app) 
 
 
